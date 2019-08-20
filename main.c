@@ -3,8 +3,10 @@
 
 #include <curses.h>
 
-#define WINDOW_WIDTH 50
-#define WINDOW_HEIGHT 20
+#include "elements.h"
+
+#define WINDOW_WIDTH 40
+#define WINDOW_HEIGHT 25
 
 struct Coords
 {
@@ -24,6 +26,7 @@ int main()
   initscr();
   cbreak();
   noecho();
+  curs_set(0); // hides cursor
   clear();
 
   int maxlines, maxcols;
@@ -36,12 +39,18 @@ int main()
   current_win = newwin(WINDOW_HEIGHT, WINDOW_WIDTH, 0, 0);
 
   int c = 0;
+
+  drawElements(current_win, &c);
+  wrefresh(current_win);
+
   while (c != 'x')
   {
     c = getch();
 
-    //wclear(current_win);
-    mvwaddch(current_win, 15, 15, c);
+    updateElements();
+
+    wclear(current_win);
+    drawElements(current_win, &c);
     wrefresh(current_win);
   }
 

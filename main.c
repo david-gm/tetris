@@ -8,12 +8,6 @@
 #define WINDOW_WIDTH 40
 #define WINDOW_HEIGHT 25
 
-struct Coords
-{
-  int y;
-  int x;
-};
-
 int main()
 {
   struct Coords coords;
@@ -26,6 +20,7 @@ int main()
   initscr();
   cbreak();
   noecho();
+  keypad(stdscr, TRUE); // enable arrow keys and function keys; stdscr is the regular screen
   curs_set(0); // hides cursor
   clear();
 
@@ -40,18 +35,22 @@ int main()
 
   int c = 0;
 
-  drawElements(current_win, &c);
+  initElements();
+  drawElements(current_win);
   wrefresh(current_win);
 
+  /* waits for 200 ms for a getch to trigger */
+  timeout(200);
   while (c != 'x')
   {
     c = getch();
 
-    updateElements();
+    updateElements(&c);
 
     wclear(current_win);
-    drawElements(current_win, &c);
+    drawElements(current_win);
     wrefresh(current_win);
+
   }
 
   delwin(current_win);

@@ -3,11 +3,20 @@
 
 #include <curses.h>
 
+struct Coords
+{
+  int y;
+  int x;
+};
+
+void initElements();
+
 void drawWall(WINDOW *win);
 
+void drawElements(WINDOW *win);
 
-void drawElements(WINDOW *win, const int *c);
+void updateElements(const int *key_press);
 
-void updateElements();
+int getElementIndex(int x, int y);
 
 #endif

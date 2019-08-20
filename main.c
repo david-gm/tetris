@@ -39,8 +39,8 @@ int main()
   drawElements(current_win);
   wrefresh(current_win);
 
-  /* waits for 200 ms for a getch to trigger */
-  timeout(200);
+  /* waits for 250 ms for a getch to trigger */
+  timeout(250);
   while (c != 'x')
   {
     c = getch();

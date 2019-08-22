@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include <curses.h>
+#include <unistd.h>
 
 #include "elements.h"
 
@@ -20,6 +21,7 @@ int main()
   initscr();
   cbreak();
   noecho();
+  
   keypad(stdscr, TRUE); // enable arrow keys and function keys; stdscr is the regular screen
   curs_set(0); // hides cursor
   clear();
@@ -32,7 +34,7 @@ int main()
   refresh();
 
   current_win = newwin(WINDOW_HEIGHT, WINDOW_WIDTH, 0, 0);
-
+  nodelay(current_win, TRUE); // no delay with getch()
   int c = 0;
 
   initElements();
@@ -43,12 +45,17 @@ int main()
   timeout(250);
   while (c != 'x')
   {
+    //sleep(50);
     c = getch();
-
     updateElements(&c);
 
     wclear(current_win);
     drawElements(current_win);
+
+    char out[20];
+    sprintf(out, "%c", c);
+    mvwaddstr(current_win, 22, 15, out);
+
     wrefresh(current_win);
 
   }

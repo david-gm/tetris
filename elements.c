@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define WALL_WIDTH 30
+#define WALL_HEIGHT 20
 
 /*
  *  dimensions = 2 x 4:
@@ -17,9 +18,11 @@ struct Tetrix
 {
     char element[8];
     struct Coords coords;
+    int width;
+    int height;
 };
 
-struct Tetrix t1 = {.coords = {.x = 5, .y = 1}};
+struct Tetrix t1 = {.coords = {.x = 5, .y = 1}, .width = 4, .height = 2};
 
 void initElements()
 {
@@ -29,7 +32,7 @@ void initElements()
 void drawWall(WINDOW *win)
 {
     int w = WALL_WIDTH;
-    int h = 20;
+    int h = WALL_HEIGHT;
     int offset = 1;
     for (unsigned int y = offset; y < h + offset; ++y)
         mvwaddch(win, y, 0, '#');
@@ -64,17 +67,28 @@ void drawElements(WINDOW *win)
 
 void updateElements(const int *key_press)
 {
-    
-    if(*key_press == KEY_LEFT && t1.coords.x > 1)
+    if(collision_bottom())
+        return;
+    if (*key_press == KEY_LEFT || *key_press == KEY_RIGHT)
+    {
+        if (*key_press == KEY_LEFT && t1.coords.x > 1)
             t1.coords.x -= 1;
-    if(*key_press == KEY_RIGHT && t1.coords.x < WALL_WIDTH)
+        if (*key_press == KEY_RIGHT && t1.coords.x + t1.width < WALL_WIDTH)
             t1.coords.x += 1;
-
-    t1.coords.y += 1;
+    }
+    else
+        t1.coords.y += 1;
 }
 
 int getElementIndex(int x, int y)
 {
     int width = 4;
     return x + y * width;
+}
+
+bool collision_bottom()
+{
+    if(t1.coords.y + t1.height >= WALL_HEIGHT)
+        return true;
+    return false;
 }
